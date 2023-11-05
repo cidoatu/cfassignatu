@@ -18,69 +18,77 @@ Parameters:
       - us-east-2
     ConstraintDescription: only to be used in us-east-1
 
+  LatestAmiId:
+    Type:  AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>
+    Default: /aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2
+
 Resources:
   FHVPC1:
-    Type: 'AWS::EC2::VPC'
+    Type: AWS::EC2::VPC
     Properties:
-      CidrBlock: '10.0.0.0/16'
+      CidrBlock: 10.0.0.0/16
       EnableDnsSupport: true
       EnableDnsHostnames: true
 
   FHInternetGateway:
-    Type: "AWS::EC2::InternetGateway"
+    Type: AWS::EC2::InternetGateway
 
   AttachGateway:
-    Type: "AWS::EC2::VPCGatewayAttachment"
+    Type: AWS::EC2::VPCGatewayAttachment
     Properties:
       VpcId:
-        Ref: "FHVPC1"
+        Ref: FHVPC1
       InternetGatewayId:
-        Ref: "FHInternetGateway"
+        Ref: FHInternetGateway
 
   InternalSubnet1:
-    Type: 'AWS::EC2::Subnet'
+    Type: AWS::EC2::Subnet
     Properties:
       VpcId:
         Ref: FHVPC1
-      CidrBlock: '10.0.0.0/24'
-      AvailabilityZone: 'us-east-2a'
+      CidrBlock: 10.0.0.0/24
+      AvailabilityZone: us-east-2a
 
   AppSubnet1:
-    Type: 'AWS::EC2::Subnet'
+    Type: AWS::EC2::Subnet
     Properties:
       VpcId:
         Ref: FHVPC1
-      CidrBlock: '10.0.1.0/24'
-      AvailabilityZone: 'us-east-2b'
+      CidrBlock: 10.0.1.0/24
+      AvailabilityZone: us-east-2b
 
   WebServer1:
-    Type: 'AWS::EC2::Instance'
+    Type: AWS::EC2::Instance
     Properties:
       InstanceType: !Ref InstanceType
+      ImageId: !Ref LatestAmiId
       SubnetId:
         Ref: AppSubnet1
      # Architecture: !FindInMap [AWSInstanceType2Arch, !Ref InstanceType, !Ref Region]
 
   DBServer1:
-    Type: 'AWS::EC2::Instance'
+    Type: AWS::EC2::Instance
     Properties:
       InstanceType: !Ref InstanceType
+      ImageId: !Ref LatestAmiId
       SubnetId:
         Ref: AppSubnet1
      # Architecture: !FindInMap [AWSInstanceType2Arch, !Ref InstanceType, !Ref Region]
 
   JumpBox:
-    Type: 'AWS::EC2::Instance'
+    Type: AWS::EC2::Instance
     Properties:
       InstanceType: !Ref InstanceType
+      ImageId: !Ref LatestAmiId
       SubnetId:
         Ref: InternalSubnet1
      # Architecture: !FindInMap [AWSInstanceType2Arch, !Ref InstanceType, !Ref Region]
 
   WebServer2:
-    Type: 'AWS::EC2::Instance'
+    Type: AWS::EC2::Instance
     Properties:
       InstanceType: !Ref InstanceType
+      ImageId: !Ref LatestAmiId
       SubnetId:
         Ref: InternalSubnet1
      # Architecture: !FindInMap [AWSInstanceType2Arch, !Ref InstanceType, !Ref Region]
