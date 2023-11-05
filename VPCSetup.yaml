@@ -76,3 +76,19 @@ Outputs:
   Subnet2Id:
     Description: Subnet 2 ID
     Value: !Ref MySubnet2
+
+  Instance1A1Id:
+    Description: EC2 Instance 1 in Availability Zone 1 ID
+    Value: !Ref MyInstance1A1
+
+  Instance1A2Id:
+    Description: EC2 Instance 2 in Availability Zone 1 ID
+    Value: !Ref MyInstance1A2
+
+  Instance2A1Id:
+    Description: EC2 Instance 1 in Availability Zone 2 ID
+    Value: !Ref MyInstance2A1
+
+  Instance2A2Id:
+    Description: EC2 Instance 2 in Availability Zone 2 ID
+    Value: !Ref MyInstance2A2
