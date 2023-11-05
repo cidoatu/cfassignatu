@@ -35,3 +35,16 @@ Resources:
         Ref: FHVPC
       CidrBlock: '10.0.1.0/24'
       AvailabilityZone: 'us-east-1b'
+
+Outputs:
+  VPCId:
+    Description: VPC ID
+    Value: !Ref FHVPC
+
+  Subnet1Id:
+    Description: Subnet 1 ID
+    Value: !Ref MySubnet1
+
+  Subnet2Id:
+    Description: Subnet 2 ID
+    Value: !Ref MySubnet2
