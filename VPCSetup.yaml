@@ -1,0 +1,26 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Create a VPC with 2 Availability Zones
+
+Resources:
+  MyVPC:
+    Type: 'AWS::EC2::VPC'
+    Properties:
+      CidrBlock: '10.0.0.0/16'
+      EnableDnsSupport: true
+      EnableDnsHostnames: true
+
+  MySubnet1:
+    Type: 'AWS::EC2::Subnet'
+    Properties:
+      VpcId:
+        Ref: VPC1
+      CidrBlock: '10.0.0.0/24'
+      AvailabilityZone: 'us-east-1a'
+
+  MySubnet2:
+    Type: 'AWS::EC2::Subnet'
+    Properties:
+      VpcId:
+        Ref: VPC2
+      CidrBlock: '10.0.1.0/24'
+      AvailabilityZone: 'us-east-1b'
