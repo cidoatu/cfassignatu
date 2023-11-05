@@ -36,6 +36,34 @@ Resources:
       CidrBlock: '10.0.1.0/24'
       AvailabilityZone: 'us-east-1b'
 
+  MyInstance1A1:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      InstanceType: 't2.micro'
+      SubnetId:
+        Ref: MySubnet1
+
+  MyInstance1A2:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      InstanceType: 't2.micro'
+      SubnetId:
+        Ref: MySubnet1
+
+  MyInstance2A1:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      InstanceType: 't2.micro'
+      SubnetId:
+        Ref: MySubnet2
+
+  MyInstance2A2:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      InstanceType: 't2.micro'
+      SubnetId:
+        Ref: MySubnet2
+
 Outputs:
   VPCId:
     Description: VPC ID
