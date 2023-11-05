@@ -2,18 +2,29 @@ AWSTemplateFormatVersion: '2010-09-09'
 Description: Create a VPC with 2 Availability Zones
 
 Resources:
-  MyVPC:
+  FHVPC:
     Type: 'AWS::EC2::VPC'
     Properties:
       CidrBlock: '10.0.0.0/16'
       EnableDnsSupport: true
       EnableDnsHostnames: true
 
+  FHInternetGateway:
+    Type: "AWS::EC2::InternetGateway"
+
+  AttachGateway:
+    Type: "AWS::EC2::VPCGatewayAttachment"
+    Properties:
+      VpcId:
+        Ref: "FHVPC"
+      InternetGatewayId:
+        Ref: "FHInternetGateway"
+
   MySubnet1:
     Type: 'AWS::EC2::Subnet'
     Properties:
       VpcId:
-        Ref: VPC1
+        Ref: FHVPC
       CidrBlock: '10.0.0.0/24'
       AvailabilityZone: 'us-east-1a'
 
@@ -21,6 +32,6 @@ Resources:
     Type: 'AWS::EC2::Subnet'
     Properties:
       VpcId:
-        Ref: VPC2
+        Ref: FHVPC
       CidrBlock: '10.0.1.0/24'
       AvailabilityZone: 'us-east-1b'
