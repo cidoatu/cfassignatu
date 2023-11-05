@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: Create a VPC with 2 Availability Zones
+Description: Create a VPC with 2 Availability Zones with 2 EC2 instances in each AZ
 
 Resources:
   FHVPC:
