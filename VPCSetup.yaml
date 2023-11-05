@@ -24,7 +24,7 @@ Parameters:
     ConstraintDescription: only to be used in us-east-1
 
 Resources:
-  FHVPC:
+  FHVPC1:
     Type: 'AWS::EC2::VPC'
     Properties:
       CidrBlock: '10.0.0.0/16'
@@ -38,80 +38,83 @@ Resources:
     Type: "AWS::EC2::VPCGatewayAttachment"
     Properties:
       VpcId:
-        Ref: "FHVPC"
+        Ref: "FHVPC1"
       InternetGatewayId:
         Ref: "FHInternetGateway"
 
-  MySubnet1:
+  InternalSubnet1:
     Type: 'AWS::EC2::Subnet'
     Properties:
       VpcId:
-        Ref: FHVPC
+        Ref: FHVPC1
       CidrBlock: '10.0.0.0/24'
       AvailabilityZone: 'us-east-1a'
 
-  MySubnet2:
+  AppSubnet1:
     Type: 'AWS::EC2::Subnet'
     Properties:
       VpcId:
-        Ref: FHVPC
+        Ref: FHVPC1
       CidrBlock: '10.0.1.0/24'
       AvailabilityZone: 'us-east-1b'
 
-  MyInstance1A1:
+  WebServer1:
     Type: 'AWS::EC2::Instance'
     Properties:
       InstanceType: !Ref InstanceType
       SubnetId:
-        Ref: MySubnet1
+        Ref: AppSubnet1
       Architecture: !FindInMap [InstanceTypeArchitectures, !Ref InstanceType, !Ref Region]
 
-  MyInstance1A2:
+  DBServer1:
     Type: 'AWS::EC2::Instance'
     Properties:
       InstanceType: !Ref InstanceType
       SubnetId:
-        Ref: MySubnet1
+        Ref: AppSubnet1
+      Architecture: !FindInMap [InstanceTypeArchitectures, !Ref InstanceType, !Ref Region]
 
-  MyInstance2A1:
+  JumpBox:
     Type: 'AWS::EC2::Instance'
     Properties:
       InstanceType: !Ref InstanceType
       SubnetId:
-        Ref: MySubnet2
+        Ref: InternalSubnet1
+      Architecture: !FindInMap [InstanceTypeArchitectures, !Ref InstanceType, !Ref Region]
 
-  MyInstance2A2:
+  WebServer2:
     Type: 'AWS::EC2::Instance'
     Properties:
       InstanceType: !Ref InstanceType
       SubnetId:
-        Ref: MySubnet2
+        Ref: InternalSubnet1
+      Architecture: !FindInMap [InstanceTypeArchitectures, !Ref InstanceType, !Ref Region]
 
 Outputs:
   VPCId:
-    Description: VPC ID
-    Value: !Ref FHVPC
+    Description: VPC1 ID
+    Value: !Ref FHVPC1
 
   Subnet1Id:
-    Description: Subnet 1 ID
-    Value: !Ref MySubnet1
+    Description: internal Subnet ID
+    Value: !Ref InternalSubnet1
 
   Subnet2Id:
-    Description: Subnet 2 ID
-    Value: !Ref MySubnet2
+    Description: Application Subnet ID
+    Value: !Ref AppSubnet1
 
   Instance1A1Id:
-    Description: EC2 Instance 1 in Availability Zone 1 ID
-    Value: !Ref MyInstance1A1
+    Description: Web Server in App AZ ID
+    Value: !Ref WebServer1
 
   Instance1A2Id:
-    Description: EC2 Instance 2 in Availability Zone 1 ID
-    Value: !Ref MyInstance1A2
+    Description: App Server in Internal AZ ID
+    Value: !Ref WebServer2
 
   Instance2A1Id:
-    Description: EC2 Instance 1 in Availability Zone 2 ID
-    Value: !Ref MyInstance2A1
+    Description: Database server in App AZ ID
+    Value: !Ref DBServer1
 
   Instance2A2Id:
-    Description: EC2 Instance 2 in Availability Zone 2 ID
-    Value: !Ref MyInstance2A2
+    Description: Jumpbox in Internal AZ ID
+    Value: !Ref JumpBox
