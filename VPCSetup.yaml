@@ -1,6 +1,11 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Description: Create a VPC with 2 Availability Zones with 2 EC2 instances in each AZ
 
+Mappings:
+  InstanceTypeArchitectures:
+    t2.micro:
+      Architecture: HVM64
+
 Parameters:
   InstanceType:
     Description: EC2 instance type
@@ -9,6 +14,13 @@ Parameters:
     AllowedValues:
       - t2.micro
     ConstraintDescription: must be a valid EC2 instance type
+
+  Region:
+    Description: AWS region
+    Type: String
+    Default: us-east-1
+    AllowedValues:
+      - us-east-1
 
 
 Resources:
@@ -52,6 +64,7 @@ Resources:
       InstanceType: !Ref InstanceType
       SubnetId:
         Ref: MySubnet1
+      Architecture: !FindInMap [InstanceTypeArchitectures, !Ref InstanceType, !Ref Region]
 
   MyInstance1A2:
     Type: 'AWS::EC2::Instance'
