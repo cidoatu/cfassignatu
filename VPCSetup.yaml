@@ -1,11 +1,6 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Description: Create a VPC with 2 Availability Zones with 2 EC2 instances in each AZ
 
-Mappings:
-  InstanceTypeArchitectures:
-    t2.micro:
-      Architecture: HVM64
-
 Parameters:
   InstanceType:
     Description: EC2 instance type
@@ -18,9 +13,9 @@ Parameters:
   Region:
     Description: AWS region
     Type: String
-    Default: us-east-1
+    Default: us-east-2
     AllowedValues:
-      - us-east-1
+      - us-east-2
     ConstraintDescription: only to be used in us-east-1
 
 Resources:
@@ -48,7 +43,7 @@ Resources:
       VpcId:
         Ref: FHVPC1
       CidrBlock: '10.0.0.0/24'
-      AvailabilityZone: 'us-east-1a'
+      AvailabilityZone: 'us-east-2a'
 
   AppSubnet1:
     Type: 'AWS::EC2::Subnet'
@@ -56,7 +51,7 @@ Resources:
       VpcId:
         Ref: FHVPC1
       CidrBlock: '10.0.1.0/24'
-      AvailabilityZone: 'us-east-1b'
+      AvailabilityZone: 'us-east-2b'
 
   WebServer1:
     Type: 'AWS::EC2::Instance'
@@ -64,7 +59,7 @@ Resources:
       InstanceType: !Ref InstanceType
       SubnetId:
         Ref: AppSubnet1
-      Architecture: !FindInMap [InstanceTypeArchitectures, !Ref InstanceType, !Ref Region]
+     # Architecture: !FindInMap [AWSInstanceType2Arch, !Ref InstanceType, !Ref Region]
 
   DBServer1:
     Type: 'AWS::EC2::Instance'
@@ -72,7 +67,7 @@ Resources:
       InstanceType: !Ref InstanceType
       SubnetId:
         Ref: AppSubnet1
-      Architecture: !FindInMap [InstanceTypeArchitectures, !Ref InstanceType, !Ref Region]
+     # Architecture: !FindInMap [AWSInstanceType2Arch, !Ref InstanceType, !Ref Region]
 
   JumpBox:
     Type: 'AWS::EC2::Instance'
@@ -80,7 +75,7 @@ Resources:
       InstanceType: !Ref InstanceType
       SubnetId:
         Ref: InternalSubnet1
-      Architecture: !FindInMap [InstanceTypeArchitectures, !Ref InstanceType, !Ref Region]
+     # Architecture: !FindInMap [AWSInstanceType2Arch, !Ref InstanceType, !Ref Region]
 
   WebServer2:
     Type: 'AWS::EC2::Instance'
@@ -88,7 +83,7 @@ Resources:
       InstanceType: !Ref InstanceType
       SubnetId:
         Ref: InternalSubnet1
-      Architecture: !FindInMap [InstanceTypeArchitectures, !Ref InstanceType, !Ref Region]
+     # Architecture: !FindInMap [AWSInstanceType2Arch, !Ref InstanceType, !Ref Region]
 
 Outputs:
   VPCId:
