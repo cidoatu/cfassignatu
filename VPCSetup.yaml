@@ -21,7 +21,7 @@ Parameters:
     Default: us-east-1
     AllowedValues:
       - us-east-1
-
+    ConstraintDescription: only to be used in us-east-1
 
 Resources:
   FHVPC:
