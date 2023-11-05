@@ -1,6 +1,16 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Description: Create a VPC with 2 Availability Zones with 2 EC2 instances in each AZ
 
+Parameters:
+  InstanceType:
+    Description: EC2 instance type
+    Type: String
+    Default: t2.micro
+    AllowedValues:
+      - t2.micro
+    ConstraintDescription: must be a valid EC2 instance type
+
+
 Resources:
   FHVPC:
     Type: 'AWS::EC2::VPC'
@@ -39,28 +49,28 @@ Resources:
   MyInstance1A1:
     Type: 'AWS::EC2::Instance'
     Properties:
-      InstanceType: 't2.micro'
+      InstanceType: !Ref InstanceType
       SubnetId:
         Ref: MySubnet1
 
   MyInstance1A2:
     Type: 'AWS::EC2::Instance'
     Properties:
-      InstanceType: 't2.micro'
+      InstanceType: !Ref InstanceType
       SubnetId:
         Ref: MySubnet1
 
   MyInstance2A1:
     Type: 'AWS::EC2::Instance'
     Properties:
-      InstanceType: 't2.micro'
+      InstanceType: !Ref InstanceType
       SubnetId:
         Ref: MySubnet2
 
   MyInstance2A2:
     Type: 'AWS::EC2::Instance'
     Properties:
-      InstanceType: 't2.micro'
+      InstanceType: !Ref InstanceType
       SubnetId:
         Ref: MySubnet2
 
