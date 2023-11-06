@@ -1,0 +1,61 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: EC2 instances setup 
+  
+Parameters:
+  InstanceType:
+    Description: EC2 instance type
+    Type: String
+    Default: t2.micro
+    AllowedValues:
+      - t2.micro
+    ConstraintDescription: must be a valid EC2 instance type
+
+  LatestAmiId:
+    Type:  AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>
+    Default: /aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2
+
+Resources:
+  WebServer1:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: !Ref InstanceType
+      ImageId: !Ref LatestAmiId
+      SubnetId: !ImportValue ExportedSubnet1ID
+
+  DBServer1:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: !Ref InstanceType
+      ImageId: !Ref LatestAmiId
+      SubnetId: !ImportValue ExportedSubnet1ID
+
+  JumpBox:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: !Ref InstanceType
+      ImageId: !Ref LatestAmiId
+      SubnetId: !ImportValue ExportedSubnet2ID
+
+  WebServer2:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: !Ref InstanceType
+      ImageId: !Ref LatestAmiId
+      SubnetId: !ImportValue ExportedSubnet2ID
+  
+Outputs:
+  Instance1A1Id:
+    Description: Web Server in App AZ ID
+    Value: !Ref WebServer1
+
+  Instance1A2Id:
+    Description: App Server in Internal AZ ID
+    Value: !Ref WebServer2
+
+  Instance2A1Id:
+    Description: Database server in App AZ ID
+    Value: !Ref DBServer1
+
+  Instance2A2Id:
+    Description: Jumpbox in Internal AZ ID
+    Value: !Ref JumpBox

@@ -2,14 +2,6 @@ AWSTemplateFormatVersion: '2010-09-09'
 Description: Create a VPC with 2 Availability Zones with 2 EC2 instances in each AZ
 
 Parameters:
-  InstanceType:
-    Description: EC2 instance type
-    Type: String
-    Default: t2.micro
-    AllowedValues:
-      - t2.micro
-    ConstraintDescription: must be a valid EC2 instance type
-
   Region:
     Description: AWS region
     Type: String
@@ -17,10 +9,6 @@ Parameters:
     AllowedValues:
       - us-east-2
     ConstraintDescription: only to be used in us-east-1
-
-  LatestAmiId:
-    Type:  AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>
-    Default: /aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2
 
 Resources:
   FHVPC1:
@@ -57,67 +45,23 @@ Resources:
       CidrBlock: 10.0.1.0/24
       AvailabilityZone: us-east-2b
 
-  WebServer1:
-    Type: AWS::EC2::Instance
-    Properties:
-      InstanceType: !Ref InstanceType
-      ImageId: !Ref LatestAmiId
-      SubnetId:
-        Ref: AppSubnet1
-     # Architecture: !FindInMap [AWSInstanceType2Arch, !Ref InstanceType, !Ref Region]
-
-  DBServer1:
-    Type: AWS::EC2::Instance
-    Properties:
-      InstanceType: !Ref InstanceType
-      ImageId: !Ref LatestAmiId
-      SubnetId:
-        Ref: AppSubnet1
-     # Architecture: !FindInMap [AWSInstanceType2Arch, !Ref InstanceType, !Ref Region]
-
-  JumpBox:
-    Type: AWS::EC2::Instance
-    Properties:
-      InstanceType: !Ref InstanceType
-      ImageId: !Ref LatestAmiId
-      SubnetId:
-        Ref: InternalSubnet1
-     # Architecture: !FindInMap [AWSInstanceType2Arch, !Ref InstanceType, !Ref Region]
-
-  WebServer2:
-    Type: AWS::EC2::Instance
-    Properties:
-      InstanceType: !Ref InstanceType
-      ImageId: !Ref LatestAmiId
-      SubnetId:
-        Ref: InternalSubnet1
-     # Architecture: !FindInMap [AWSInstanceType2Arch, !Ref InstanceType, !Ref Region]
 
 Outputs:
   VPCId:
     Description: VPC1 ID
     Value: !Ref FHVPC1
+    Export:
+      Name: ExportedVPCID
 
   Subnet1Id:
     Description: internal Subnet ID
     Value: !Ref InternalSubnet1
+    Export:
+      Name: ExportedSubnet1ID
 
   Subnet2Id:
     Description: Application Subnet ID
     Value: !Ref AppSubnet1
+    Export:
+      Name: ExportedSubnet2ID
 
-  Instance1A1Id:
-    Description: Web Server in App AZ ID
-    Value: !Ref WebServer1
-
-  Instance1A2Id:
-    Description: App Server in Internal AZ ID
-    Value: !Ref WebServer2
-
-  Instance2A1Id:
-    Description: Database server in App AZ ID
-    Value: !Ref DBServer1
-
-  Instance2A2Id:
-    Description: Jumpbox in Internal AZ ID
-    Value: !Ref JumpBox
