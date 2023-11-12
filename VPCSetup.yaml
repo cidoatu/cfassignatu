@@ -95,7 +95,7 @@ Resources:
       RouteTableId: !Ref PublicRouteTable
       SubnetId: !Ref PublicSubnet1
 
-  PrivateSubnet1RouteTableAssociation:
+  PrivateSubnetRouteTableAssociation:
     Type: AWS::EC2::SubnetRouteTableAssociation
     DependsOn: 
       - PrivateRouteTable

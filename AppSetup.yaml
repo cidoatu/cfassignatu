@@ -22,13 +22,6 @@ Parameters:
     Description: A security group to apply to the instance
     Type: String
 
-  DbName:
-    Type: String
-  DbUser:
-    Type: String
-  DbPass:
-    Type: String
-    Description: "It should be less than 8 characters"
 
 Resources:
   WebServer1:
@@ -63,18 +56,14 @@ Resources:
       SubnetId: !ImportValue ExportedSubnet2ID
   
 Outputs:
-  Instance1A1Id:
+  AppServerId:
     Description: Web Server in App AZ ID
     Value: !Ref WebServer1
 
-  Instance1A2Id:
-    Description: App Server in Internal AZ ID
-    Value: !Ref WebServer2
-
-  Instance2A1Id:
+  DBServerId:
     Description: Database server in App AZ ID
     Value: !Ref DBServer1
 
-  Instance2A2Id:
+  JumpboxId:
     Description: Jumpbox in Internal AZ ID
     Value: !Ref JumpBox
