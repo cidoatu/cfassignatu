@@ -6,6 +6,11 @@ Parameters:
   
   
 Resources:
+  VPCStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: ./VPCetup.yml
+
   SecurityStack:
     Type: AWS::CloudFormation::Stack
     Properties:
@@ -16,7 +21,7 @@ Resources:
     Properties:
       Parameters:
         SecurityGroupId: !GetAtt SecurityStack.Outputs.SecurityGroupId 
-      TemplateURL: ./compute.yml
+      TemplateURL: ./AppSetup.yml
 
 Outputs:
   InstanceIP:
