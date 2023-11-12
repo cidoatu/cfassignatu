@@ -36,7 +36,7 @@ Resources:
           ToPort: 2049
           CidrIp: 0.0.0.0/0
 
-  RDSSecurityGroup:
+  DBSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties: 
       GroupName: RDSSecurityGroup
@@ -55,6 +55,6 @@ Outputs:
       Name: !Sub '${AWS::StackName}-AppSecurityGroup'
 
   DBSecurityGroupId:
-    Value: !GetAtt RDSSecurityGroup.GroupId
+    Value: !GetAtt DBSecurityGroup.GroupId
     Export: 
       Name: !Sub '${AWS::StackName}-DBSecurityGroup'
