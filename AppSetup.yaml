@@ -14,29 +14,48 @@ Parameters:
     Type:  AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>
     Default: /aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2
 
+  SSHKey:
+    Type: AWS::EC2::KeyPair::KeyName
+    Description: Name of an existing EC2 KeyPair to enable SSH access to the instance.
+
+  SecurityGroupId:
+    Description: A security group to apply to the instance
+    Type: String
+
+  DbName:
+    Type: String
+  DbUser:
+    Type: String
+  DbPass:
+    Type: String
+    Description: "It should be less than 8 characters"
+
 Resources:
   WebServer1:
     Type: AWS::EC2::Instance
     Properties:
+      UserData:
+        Fn::Base64: |
+          #!/bin/bash -xe
+          sudo amazon-linux-extras install -y nginx1
+          sudo service nginx start
       InstanceType: !Ref InstanceType
       ImageId: !Ref LatestAmiId
       SubnetId: !ImportValue ExportedSubnet1ID
+      SecurityGroupIds:
+        - !Ref SecurityGroupId
+      Tags: 
+        - Key: Name
+          Value: AppNginxInstance    
 
   DBServer1:
     Type: AWS::EC2::Instance
     Properties:
       InstanceType: !Ref InstanceType
       ImageId: !Ref LatestAmiId
-      SubnetId: !ImportValue ExportedSubnet1ID
-
-  JumpBox:
-    Type: AWS::EC2::Instance
-    Properties:
-      InstanceType: !Ref InstanceType
-      ImageId: !Ref LatestAmiId
       SubnetId: !ImportValue ExportedSubnet2ID
 
-  WebServer2:
+  JumpBox:
     Type: AWS::EC2::Instance
     Properties:
       InstanceType: !Ref InstanceType

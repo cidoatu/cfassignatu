@@ -17,6 +17,9 @@ Resources:
       CidrBlock: 10.0.0.0/16
       EnableDnsSupport: true
       EnableDnsHostnames: true
+      Tags:
+        - Key: Name
+          Value: VPC
 
   FHInternetGateway:
     Type: AWS::EC2::InternetGateway
@@ -29,6 +32,38 @@ Resources:
       InternetGatewayId:
         Ref: FHInternetGateway
 
+  PublicRouteTable:
+    Type: AWS::EC2::RouteTable
+    DependsOn: MyVPC
+    Properties:
+      VpcId: !Ref FHVPC1
+      Tags:
+        - Key: Name
+          Value: !Sub ${TagPrefix}-PublicRouteTable
+
+  PrivateRouteTable:
+    Type: AWS::EC2::RouteTable
+    DependsOn: MyVPC
+    Properties:
+      VpcId: !Ref FHVPC1
+      Tags:
+        - Key: Name
+          Value: !Sub ${TagPrefix}-PrivateRouteTable
+
+  PublicRoute:
+    Type: AWS::EC2::Route
+    Properties:
+      DestinationCidrBlock: 0.0.0.0/0
+      RouteTableId: !Ref PublicRouteTable
+      GatewayId: !Ref FHInternetGateway      
+
+  PrivateRoute:
+    Type: AWS::EC2::Route
+    Properties:
+      DestinationCidrBlock: 0.0.0.0/0
+      RouteTableId: !Ref PrivateRouteTable
+      GatewayId: !Ref FHInternetGateway     
+
   InternalSubnet1:
     Type: AWS::EC2::Subnet
     Properties:
@@ -36,15 +71,38 @@ Resources:
         Ref: FHVPC1
       CidrBlock: 10.0.0.0/24
       AvailabilityZone: us-east-2a
+      Tags:
+      - Key: Name
+        Value: !Sub ${TagPrefix}-PrivateSubnet1 
 
-  AppSubnet1:
+  PublicSubnet1:
     Type: AWS::EC2::Subnet
     Properties:
       VpcId:
         Ref: FHVPC1
       CidrBlock: 10.0.1.0/24
       AvailabilityZone: us-east-2b
+      Tags:
+      - Key: Name
+        Value: !Sub ${TagPrefix}-PublicSubnet1 
 
+  PublicSubnetRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    DependsOn: 
+      - PublicRouteTable
+      - PublicSubnet1
+    Properties: 
+      RouteTableId: !Ref PublicRouteTable
+      SubnetId: !Ref PublicSubnet1
+
+  PrivateSubnet1RouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    DependsOn: 
+      - PrivateRouteTable
+      - InternalSubnet1
+    Properties: 
+      RouteTableId: !Ref PrivateRouteTable
+      SubnetId: !Ref InternalSubnet1
 
 Outputs:
   VPCId:
@@ -57,11 +115,11 @@ Outputs:
     Description: internal Subnet ID
     Value: !Ref InternalSubnet1
     Export:
-      Name: ExportedSubnet1ID
+      Name: ${AWS::StackName}-InternalSubnet
 
   Subnet2Id:
-    Description: Application Subnet ID
-    Value: !Ref AppSubnet1
+    Description: Public Subnet ID
+    Value: !Ref PublicSubnet1
     Export:
-      Name: ExportedSubnet2ID
+      Name: ${AWS::StackName}-PublicSubnet
 

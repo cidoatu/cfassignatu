@@ -1,0 +1,24 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: |
+  Nested stack for Securit and Compute for FridayHITT
+
+Parameters:
+  
+  
+Resources:
+  SecurityStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: ./security.yml
+
+  ComputeStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      Parameters:
+        SecurityGroupId: !GetAtt SecurityStack.Outputs.SecurityGroupId 
+      TemplateURL: ./compute.yml
+
+Outputs:
+  InstanceIP:
+    Description: Get to nginx here!
+    Value: !GetAtt ComputeStack.Outputs.InstanceIp
