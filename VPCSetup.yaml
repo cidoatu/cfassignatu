@@ -102,6 +102,26 @@ Resources:
       Tags:
       - Key: Name
         Value: 'Private route 2'
+  RouteTableAssociation1Public:
+    Type: 'AWS::EC2::SubnetRouteTableAssociation'
+    Properties:
+      SubnetId: !Ref Subnet1Public
+      RouteTableId: !Ref RouteTable1Public
+  RouteTableAssociation1Private:
+    Type: 'AWS::EC2::SubnetRouteTableAssociation'
+    Properties:
+      SubnetId: !Ref Subnet1Private
+      RouteTableId: !Ref RouteTable1Private
+  RouteTableAssociation2Public:
+    Type: 'AWS::EC2::SubnetRouteTableAssociation'
+    Properties:
+      SubnetId: !Ref Subnet2Public
+      RouteTableId: !Ref RouteTable2Public
+  RouteTableAssociation2Private:
+    Type: 'AWS::EC2::SubnetRouteTableAssociation'
+    Properties:
+      SubnetId: !Ref Subnet2Private
+      RouteTableId: !Ref RouteTable2Private
 Outputs:
   StackName:
     Description: 'Stack name.'
@@ -146,3 +166,23 @@ Outputs:
     Value: !Select [1, !GetAZs '']
     Export:
       Name: !Sub '${AWS::StackName}-AZ2'
+  RouteTable1Public:
+    Description: 'Route table 1 public.'
+    Value: !Ref RouteTable1Public
+    Export:
+      Name: !Sub '${AWS::StackName}-RouteTable1Public'
+  RouteTable1Private:
+    Description: 'Route table 1 private.'
+    Value: !Ref RouteTablePrivate
+    Export:
+      Name: !Sub '${AWS::StackName}-RouteTable1Private'
+  RouteTable2Public:
+    Description: 'Route table 2 public.'
+    Value: !Ref RouteTableBPublic
+    Export:
+      Name: !Sub '${AWS::StackName}-RouteTable2Public'
+  RouteTable2Private:
+    Description: 'Route table 2 private.'
+    Value: !Ref RouteTable2Private
+    Export:
+      Name: !Sub '${AWS::StackName}-RouteTable2Private'
