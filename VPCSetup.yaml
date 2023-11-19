@@ -122,17 +122,50 @@ Resources:
     Properties:
       SubnetId: !Ref Subnet2Private
       RouteTableId: !Ref RouteTable2Private
-  RouteTablePublicInternetRoute: 
-    Type: 'AWS::EC2::Route'
-    DependsOn: VPCGatewayAttachment
-    Properties:
-      RouteTableId: !Ref RouteTablePublic
-      DestinationCidrBlock: '0.0.0.0/0'
-      GatewayId: !Ref InternetGateway
   EgressOnlyInternetGateway:
     Type: 'AWS::EC2::EgressOnlyInternetGateway'
     Properties:
       VpcId: !Ref VPC
+  RouteTable1PublicInternetRoute: 
+    Type: 'AWS::EC2::Route'
+    DependsOn: VPCGatewayAttachment
+    Properties:
+      RouteTableId: !Ref RouteTable1Public
+      DestinationCidrBlock: '0.0.0.0/0'
+      GatewayId: !Ref InternetGateway
+  RouteTable1PublicInternetRouteIPv6:
+    Type: 'AWS::EC2::Route'
+    DependsOn: VPCGatewayAttachment
+    Properties:
+      RouteTableId: !Ref RouteTable1Public
+      DestinationIpv6CidrBlock: '::/0'
+      GatewayId: !Ref InternetGateway
+  RouteTable1PrivateInternetRouteIPv6:
+    Type: 'AWS::EC2::Route'
+    Properties:
+      RouteTableId: !Ref RouteTable1Private
+      DestinationIpv6CidrBlock: '::/0'
+      EgressOnlyInternetGatewayId: !Ref EgressOnlyInternetGateway
+  RouteTable2PublicInternetRoute:
+    Type: 'AWS::EC2::Route'
+    DependsOn: VPCGatewayAttachment
+    Properties:
+      RouteTableId: !Ref RouteTable2Public
+      DestinationCidrBlock: '0.0.0.0/0'
+      GatewayId: !Ref InternetGateway
+  RouteTable2PublicInternetRouteIPv6:
+    Type: 'AWS::EC2::Route'
+    DependsOn: VPCGatewayAttachment
+    Properties:
+      RouteTableId: !Ref RouteTable2Public
+      DestinationIpv6CidrBlock: '::/0'
+      GatewayId: !Ref InternetGateway
+  RouteTable2PrivateInternetRouteIPv6:
+    Type: 'AWS::EC2::Route'
+    Properties:
+      RouteTableId: !Ref RouteTable2Private
+      DestinationIpv6CidrBlock: '::/0'
+      EgressOnlyInternetGatewayId: !Ref EgressOnlyInternetGateway
 Outputs:
   StackName:
     Description: 'Stack name.'
@@ -184,12 +217,12 @@ Outputs:
       Name: !Sub '${AWS::StackName}-RouteTable1Public'
   RouteTable1Private:
     Description: 'Route table 1 private.'
-    Value: !Ref RouteTablePrivate
+    Value: !Ref RouteTable1Private
     Export:
       Name: !Sub '${AWS::StackName}-RouteTable1Private'
   RouteTable2Public:
     Description: 'Route table 2 public.'
-    Value: !Ref RouteTableBPublic
+    Value: !Ref RouteTable2Public
     Export:
       Name: !Sub '${AWS::StackName}-RouteTable2Public'
   RouteTable2Private:
