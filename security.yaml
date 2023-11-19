@@ -21,7 +21,7 @@ Resources:
     Properties:
       GroupDescription: Allows port 80 from the world
       GroupName: !Sub 'HTTPFromAnywhere-${AWS::StackId}'
-      VpcId: !ImportValue VPC-VPC
+      VpcId: !ImportValue vpc-VPC
       SecurityGroupIngress:
         - IpProtocol: tcp
           FromPort: 22
@@ -30,7 +30,10 @@ Resources:
         - IpProtocol: tcp
           FromPort: 80
           ToPort: 80
-          CidrIp: 0.0.0.0/0
+          SourceSecurityGroupId: 
+            Fn::GetAtt:
+            - ELBSecurityGroup
+            - GroupId
 
 
   DBSecurityGroup:
@@ -38,12 +41,23 @@ Resources:
     Properties: 
       GroupName: DBSecurityGroup
       GroupDescription: DB Security Group
-      VpcId: !ImportValue VPC-VPC
+      VpcId: !ImportValue vpc-VPC
       SecurityGroupIngress:
         - IpProtocol: tcp
           FromPort: 3306
           ToPort: 3306
           SourceSecurityGroupId: !Ref SecurityGroupHTTPFromWorld
+
+  ELBSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: ELB Security Group
+      VpcId: !ImportValue vpc-VPC
+      SecurityGroupIngress:
+      - IpProtocol: tcp
+        FromPort: 80
+        ToPort: 80
+        CidrIp: 0.0.0.0/0
 
 Outputs:
   AppSecurityGroupId:
@@ -55,3 +69,8 @@ Outputs:
     Value: !GetAtt DBSecurityGroup.GroupId
     Export: 
       Name: !Sub '${AWS::StackName}-DBSecurityGroup'
+  
+  ELBSecurityGroup:
+    Value: !GetAtt ELBSecurityGroup.GroupId
+    Export: 
+      Name: !Sub '${AWS::StackName}-ELBSecurityGroup'

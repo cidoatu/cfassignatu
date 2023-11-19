@@ -30,9 +30,9 @@ Resources:
           sudo service nginx start
       InstanceType: !Ref InstanceType
       ImageId: !Ref LatestAmiId
-      SubnetId: !ImportValue VPC-Subnet1Public
+      SubnetId: !ImportValue vpc-Subnet1Public
       SecurityGroupIds:
-        - !ImportValue Security-AppSecurityGroup
+        - !ImportValue sec-AppSecurityGroup
       Tags: 
         - Key: Name
           Value: AppNginxInstance1    
@@ -42,9 +42,9 @@ Resources:
     Properties:
       InstanceType: !Ref InstanceType
       ImageId: !Ref LatestAmiId
-      SubnetId: !ImportValue VPC-Subnet1Private
+      SubnetId: !ImportValue vpc-Subnet1Private
       SecurityGroupIds:
-        - !ImportValue Security-DBSecurityGroup
+        - !ImportValue sec-DBSecurityGroup
       Tags: 
         - Key: Name
           Value: AppNginxInstance1 
@@ -59,9 +59,9 @@ Resources:
           sudo service nginx start
       InstanceType: !Ref InstanceType
       ImageId: !Ref LatestAmiId
-      SubnetId: !ImportValue VPC-Subnet2Public
+      SubnetId: !ImportValue vpc-Subnet2Public
       SecurityGroupIds:
-        - !ImportValue Security-AppSecurityGroup
+        - !ImportValue sec-AppSecurityGroup
       Tags: 
         - Key: Name
           Value: AppNginxInstance1    
@@ -71,14 +71,37 @@ Resources:
     Properties:
       InstanceType: !Ref InstanceType
       ImageId: !Ref LatestAmiId
-      SubnetId: !ImportValue VPC-Subnet2Private
+      SubnetId: !ImportValue vpc-Subnet2Private
       SecurityGroupIds:
-        - !ImportValue Security-DBSecurityGroup
+        - !ImportValue sec-DBSecurityGroup
       Tags: 
         - Key: Name
           Value: AppNginxInstance1 
 
-  
+  LoadBalancerforEC2:
+    Type: AWS::ElasticLoadBalancing::LoadBalancer
+    Properties:
+      Instances:
+      - !Ref WebServer1
+      - !Ref WebServer2
+      Listeners:
+      - LoadBalancerPort: '80'
+        InstancePort: '80'
+        Protocol: HTTP
+      HealthCheck:
+        Target: HTTP:80/
+        HealthyThreshold: '3'
+        UnhealthyThreshold: '5'
+        Interval: '30'
+        Timeout: '5'
+      SecurityGroups:
+        - !ImportValue sec-ELBSecurityGroup
+      Subnets:
+        - !ImportValue vpc-Subnet1Public
+        - !ImportValue vpc-Subnet2Public
+
+
+
 Outputs:
   AppServer1Id:
     Description: Web Server in AZ 1 ID
@@ -96,3 +119,9 @@ Outputs:
     Description: Database server in AZ 2 ID
     Value: !Ref DBServer2
 
+  ELBURL:
+    Description: ELB URL
+    Value: !Join 
+    - ''
+    - - 'http://'
+      - !GetAtt LoadBalancerforEC2.DNSName
