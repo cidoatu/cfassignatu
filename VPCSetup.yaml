@@ -108,3 +108,13 @@ Outputs:
     Value: !Ref Subnet2Private
     Export:
       Name: !Sub '${AWS::StackName}-Subnet2Private'
+  AZ1:
+    Description: 'AZ of 1'
+    Value: !Select [0, !GetAZs '']
+    Export:
+      Name: !Sub '${AWS::StackName}-AZ1'
+  AZ2:
+    Description: 'AZ of 2'
+    Value: !Select [1, !GetAZs '']
+    Export:
+      Name: !Sub '${AWS::StackName}-AZ2'
