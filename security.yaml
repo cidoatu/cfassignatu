@@ -13,7 +13,7 @@ Resources:
     Properties:
       GroupDescription: Allows port 80 from the world
       GroupName: !Sub 'HTTPFromAnywhere-${AWS::StackId}'
-      VpcId: !Ref VPCID
+      VpcId: !ImportValue VPC
       SecurityGroupIngress:
         - IpProtocol: tcp
           FromPort: 22
@@ -39,9 +39,9 @@ Resources:
   DBSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties: 
-      GroupName: RDSSecurityGroup
-      GroupDescription: RDS Security Group
-      VpcId: !Ref VPCID
+      GroupName: DBSecurityGroup
+      GroupDescription: DB Security Group
+      VpcId: !ImportValue VPC
       SecurityGroupIngress:
         - IpProtocol: tcp
           FromPort: 3306

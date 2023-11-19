@@ -36,7 +36,7 @@ Resources:
       ImageId: !Ref LatestAmiId
       SubnetId: !ImportValue Subnet1Public
       SecurityGroupIds:
-        - !Ref SecurityGroupId
+        - !ImportValue AppSecurityGroupId
       Tags: 
         - Key: Name
           Value: AppNginxInstance1    
@@ -47,6 +47,11 @@ Resources:
       InstanceType: !Ref InstanceType
       ImageId: !Ref LatestAmiId
       SubnetId: !ImportValue Subnet1Private
+      SecurityGroupIds:
+        - !ImportValue DBSecurityGroupId
+      Tags: 
+        - Key: Name
+          Value: AppNginxInstance1 
 
   WebServer2:
     Type: AWS::EC2::Instance
@@ -60,7 +65,7 @@ Resources:
       ImageId: !Ref LatestAmiId
       SubnetId: !ImportValue Subnet2Public
       SecurityGroupIds:
-        - !Ref SecurityGroupId
+        - !ImportValue AppSecurityGroupId
       Tags: 
         - Key: Name
           Value: AppNginxInstance1    
@@ -71,6 +76,11 @@ Resources:
       InstanceType: !Ref InstanceType
       ImageId: !Ref LatestAmiId
       SubnetId: !ImportValue Subnet2Private
+      SecurityGroupIds:
+        - !ImportValue DBSecurityGroupId
+      Tags: 
+        - Key: Name
+          Value: AppNginxInstance1 
 
   
 Outputs:
