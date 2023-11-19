@@ -34,36 +34,59 @@ Resources:
           sudo service nginx start
       InstanceType: !Ref InstanceType
       ImageId: !Ref LatestAmiId
-      SubnetId: !ImportValue ExportedSubnet1ID
+      SubnetId: !ImportValue Subnet1Public
       SecurityGroupIds:
         - !Ref SecurityGroupId
       Tags: 
         - Key: Name
-          Value: AppNginxInstance    
+          Value: AppNginxInstance1    
 
   DBServer1:
     Type: AWS::EC2::Instance
     Properties:
       InstanceType: !Ref InstanceType
       ImageId: !Ref LatestAmiId
-      SubnetId: !ImportValue ExportedSubnet2ID
+      SubnetId: !ImportValue Subnet1Private
 
-  JumpBox:
+  WebServer2:
+    Type: AWS::EC2::Instance
+    Properties:
+      UserData:
+        Fn::Base64: |
+          #!/bin/bash -xe
+          sudo amazon-linux-extras install -y nginx1
+          sudo service nginx start
+      InstanceType: !Ref InstanceType
+      ImageId: !Ref LatestAmiId
+      SubnetId: !ImportValue Subnet2Public
+      SecurityGroupIds:
+        - !Ref SecurityGroupId
+      Tags: 
+        - Key: Name
+          Value: AppNginxInstance1    
+
+  DBServer2:
     Type: AWS::EC2::Instance
     Properties:
       InstanceType: !Ref InstanceType
       ImageId: !Ref LatestAmiId
-      SubnetId: !ImportValue ExportedSubnet2ID
+      SubnetId: !ImportValue Subnet2Private
+
   
 Outputs:
-  AppServerId:
-    Description: Web Server in App AZ ID
+  AppServer1Id:
+    Description: Web Server in AZ 1 ID
     Value: !Ref WebServer1
 
-  DBServerId:
-    Description: Database server in App AZ ID
+  DBServer1Id:
+    Description: Database server in AZ 1 ID
     Value: !Ref DBServer1
 
-  JumpboxId:
-    Description: Jumpbox in Internal AZ ID
-    Value: !Ref JumpBox
+  AppServer2Id:
+    Description: Web Server in AZ 2 ID
+    Value: !Ref WebServer2
+
+  DBServer2Id:
+    Description: Database server in AZ 2 ID
+    Value: !Ref DBServer2
+
