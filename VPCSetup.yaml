@@ -74,6 +74,34 @@ Resources:
       Tags:
       - Key: Name
         Value: 'Private 2'
+  RouteTable1Public:
+    Type: 'AWS::EC2::RouteTable'
+    Properties:
+      VpcId: !Ref VPC
+      Tags:
+      - Key: Name
+        Value: 'Public Route 1'
+  RouteTable1Private:
+    Type: 'AWS::EC2::RouteTable'
+    Properties:
+      VpcId: !Ref VPC
+      Tags:
+      - Key: Name
+        Value: 'Private route 1'
+  RouteTable2Public:
+    Type: 'AWS::EC2::RouteTable'
+    Properties:
+      VpcId: !Ref VPC
+      Tags:
+      - Key: Name
+        Value: 'Publinc route 2'
+  RouteTable2Private:
+    Type: 'AWS::EC2::RouteTable'
+    Properties:
+      VpcId: !Ref VPC
+      Tags:
+      - Key: Name
+        Value: 'Private route 2'
 Outputs:
   StackName:
     Description: 'Stack name.'
