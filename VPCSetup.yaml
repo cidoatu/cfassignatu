@@ -28,7 +28,52 @@ Resources:
     Properties:
       VpcId: !Ref VPC
       InternetGatewayId: !Ref InternetGateway
-
+  Subnet1Public:
+    DependsOn: VPCCidrBlock
+    Type: 'AWS::EC2::Subnet'
+    Properties:
+      AvailabilityZone: !Select [0, !GetAZs '']
+      CidrBlock: !Sub '10.0.0.0/20'
+      Ipv6CidrBlock: !Select [0, !Cidr [!Select [0, !GetAtt 'VPC.Ipv6CidrBlocks'], 4, 64]]
+      VpcId: !Ref VPC
+      Tags:
+      - Key: Name
+        Value: 'Public 1'
+  Subnet1Private:
+    DependsOn: VPCCidrBlock
+    Type: 'AWS::EC2::Subnet'
+    Properties:
+      AssignIpv6AddressOnCreation: false
+      AvailabilityZone: !Select [0, !GetAZs '']
+      CidrBlock: !Sub '10.0.16.0/20'
+      Ipv6CidrBlock: !Select [1, !Cidr [!Select [0, !GetAtt 'VPC.Ipv6CidrBlocks'], 4, 64]]
+      VpcId: !Ref VPC
+      Tags:
+      - Key: Name
+        Value: 'Private 1'
+  Subnet2Public:
+    DependsOn: VPCCidrBlock
+    Type: 'AWS::EC2::Subnet'
+    Properties:
+      AvailabilityZone: !Select [1, !GetAZs '']
+      CidrBlock: !Sub '10.0.32.0/20'
+      Ipv6CidrBlock: !Select [2, !Cidr [!Select [0, !GetAtt 'VPC.Ipv6CidrBlocks'], 4, 64]]
+      VpcId: !Ref VPC
+      Tags:
+      - Key: Name
+        Value: 'Public 2'
+  Subnet2Private:
+    DependsOn: VPCCidrBlock
+    Type: 'AWS::EC2::Subnet'
+    Properties:
+      AssignIpv6AddressOnCreation: false
+      AvailabilityZone: !Select [1, !GetAZs '']
+      CidrBlock: !Sub '10.0.48.0/20'
+      Ipv6CidrBlock: !Select [3, !Cidr [!Select [0, !GetAtt 'VPC.Ipv6CidrBlocks'], 4, 64]]
+      VpcId: !Ref VPC
+      Tags:
+      - Key: Name
+        Value: 'Private 2'
 Outputs:
   StackName:
     Description: 'Stack name.'
@@ -43,3 +88,23 @@ Outputs:
     Value: !Ref InternetGateway
     Export:
       Name: !Sub '${AWS::StackName}-InternetGateway'
+  Subnet1Public:
+    Description: 'Subnet 1 public.'
+    Value: !Ref Subnet1Public
+    Export:
+      Name: !Sub '${AWS::StackName}-Subnet1Public'
+  Subnet1Private:
+    Description: 'Subnet 1 private.'
+    Value: !Ref Subnet1Private
+    Export:
+      Name: !Sub '${AWS::StackName}-Subnet1Private'
+  Subnet2Public:
+    Description: 'Subnet 2 public.'
+    Value: !Ref Subnet2Public
+    Export:
+      Name: !Sub '${AWS::StackName}-Subnet2Public'
+  Subnet2Private:
+    Description: 'Subnet 2 private.'
+    Value: !Ref Subnet2Private
+    Export:
+      Name: !Sub '${AWS::StackName}-Subnet2Private'
