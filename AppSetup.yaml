@@ -96,9 +96,13 @@ Resources:
         Timeout: '5'
       SecurityGroups:
         - !ImportValue sec-ELBSecurityGroup
+      Scheme: internet-facing
       Subnets:
         - !ImportValue vpc-Subnet1Public
         - !ImportValue vpc-Subnet2Public
+      Tags: 
+        - Key: Name
+          Value: AppLoad Balancer 
 
 
 
