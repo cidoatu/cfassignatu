@@ -122,6 +122,13 @@ Resources:
     Properties:
       SubnetId: !Ref Subnet2Private
       RouteTableId: !Ref RouteTable2Private
+  RouteTablePublicInternetRoute: 
+    Type: 'AWS::EC2::Route'
+    DependsOn: VPCGatewayAttachment
+    Properties:
+      RouteTableId: !Ref RouteTablePublic
+      DestinationCidrBlock: '0.0.0.0/0'
+      GatewayId: !Ref InternetGateway
 Outputs:
   StackName:
     Description: 'Stack name.'
