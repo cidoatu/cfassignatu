@@ -18,10 +18,6 @@ Parameters:
     Type: AWS::EC2::KeyPair::KeyName
     Description: Name of an existing EC2 KeyPair to enable SSH access to the instance.
 
-  SecurityGroupId:
-    Description: A security group to apply to the instance
-    Type: String
-
 
 Resources:
   WebServer1:
@@ -34,9 +30,9 @@ Resources:
           sudo service nginx start
       InstanceType: !Ref InstanceType
       ImageId: !Ref LatestAmiId
-      SubnetId: !ImportValue Subnet1Public
+      SubnetId: !ImportValue VPC-Subnet1Public
       SecurityGroupIds:
-        - !ImportValue AppSecurityGroupId
+        - !ImportValue Security-AppSecurityGroup
       Tags: 
         - Key: Name
           Value: AppNginxInstance1    
@@ -46,9 +42,9 @@ Resources:
     Properties:
       InstanceType: !Ref InstanceType
       ImageId: !Ref LatestAmiId
-      SubnetId: !ImportValue Subnet1Private
+      SubnetId: !ImportValue VPC-Subnet1Private
       SecurityGroupIds:
-        - !ImportValue DBSecurityGroupId
+        - !ImportValue Security-DBSecurityGroup
       Tags: 
         - Key: Name
           Value: AppNginxInstance1 
@@ -63,9 +59,9 @@ Resources:
           sudo service nginx start
       InstanceType: !Ref InstanceType
       ImageId: !Ref LatestAmiId
-      SubnetId: !ImportValue Subnet2Public
+      SubnetId: !ImportValue VPC-Subnet2Public
       SecurityGroupIds:
-        - !ImportValue AppSecurityGroupId
+        - !ImportValue Security-AppSecurityGroup
       Tags: 
         - Key: Name
           Value: AppNginxInstance1    
@@ -75,9 +71,9 @@ Resources:
     Properties:
       InstanceType: !Ref InstanceType
       ImageId: !Ref LatestAmiId
-      SubnetId: !ImportValue Subnet2Private
+      SubnetId: !ImportValue VPC-Subnet2Private
       SecurityGroupIds:
-        - !ImportValue DBSecurityGroupId
+        - !ImportValue Security-DBSecurityGroup
       Tags: 
         - Key: Name
           Value: AppNginxInstance1 
